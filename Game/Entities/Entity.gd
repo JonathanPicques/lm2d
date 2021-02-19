@@ -20,29 +20,30 @@ func on_interact():
 ###
 
 var lit_time := 0.0
+var lit_pick := false
 
 # can_be_lit returns whether the player can lit this entity.
 # @param light_type - Constants.LightType
 # @pure
-func can_be_lit(light_type: int) -> bool:
+func can_be_lit(_light_type: int) -> bool:
 	return false
 
 # on_light_start is called when the player's light enters this entity.
 # @param light_type - Constants.LightType
 # @impure
-func on_light_start(light_type: int):
+func on_light_start(_light_type: int):
 	pass
 
 # on_light_process is called when the player's light collides with this entity.
 # @param light_type - Constants.LightType
 # @impure
-func on_light_process(delta: float, light_type: int):
+func on_light_process(delta: float, _light_type: int):
 	lit_time += delta
 
 # on_light_finish is called when the player's light leaves this entity.
 # @param light_type - Constants.LightType
 # @impure
-func on_light_finish(light_type: int):
+func on_light_finish(_light_type: int):
 	pass
 
 ###

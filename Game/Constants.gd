@@ -1,7 +1,4 @@
 extends Node
 class_name ConstantsNode
 
-enum LightTypes {
-	Light = 0,
-	SpectralLight = 1
-}
+enum LightTypes { Normal = 1 << 0, Spectral = 1 << 1 }

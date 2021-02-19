@@ -24,7 +24,7 @@ var input_velocity := Vector2()
 var velocity_offset := Vector2()
 
 var flashlight := false
-var flashlight_type = Constants.LightTypes.Light
+var flashlight_type = Constants.LightTypes.Normal
 
 var input_up := false
 var input_down := false
@@ -32,17 +32,22 @@ var input_left := false
 var input_right := false
 var input_jump := false
 var input_flashlight := false
+var input_flashlight_cycle := false
+
 var input_up_once := false
 var input_down_once := false
 var input_left_once := false
 var input_right_once := false
 var input_jump_once := false
 var input_flashlight_once := false
+var input_flashlight_cycle_once := false
 
 onready var PlayerSprite: Sprite = $Orientation/PlayerSprite
 onready var PlayerFlashlight: Light2D = $Orientation/Flashlight
 onready var PlayerOrientation: Node2D = $Orientation
+onready var PlayerAmbientLight: Light2D = $Orientation/AmbientLight
 onready var PlayerAnimationPlayer: AnimationPlayer = $AnimationPlayer
+onready var PlayerFlashlightCollision: Area2D = $Orientation/Flashlight/Collision
 
 onready var fsm := PlayerFiniteStateMachineObject.new(self, $StateMachine, $StateMachine/stand)
 
@@ -57,6 +62,7 @@ func _ready():
 func _physics_process(delta: float):
 	process_input(delta)
 	process_velocity(delta)
+	process_flashlight(delta)
 	fsm.process_state_machine(delta)
 	# debug
 	$Label.text = fsm.current_state_node.name
@@ -64,7 +70,7 @@ func _physics_process(delta: float):
 # process_input updates player inputs.
 # @impure
 var _up := false; var _down := false; var _left := false; var _right := false;
-var _jump := false; var _flashlight := false
+var _jump := false; var _flashlight := false; var _flashlight_cycle := false
 func process_input(_delta: float):
 	# compute frame input
 	input_up = Input.is_action_pressed("player_up")
@@ -73,6 +79,7 @@ func process_input(_delta: float):
 	input_right = Input.is_action_pressed("player_right")
 	input_jump = Input.is_action_pressed("player_jump")
 	input_flashlight = Input.is_action_pressed("player_flashlight")
+	input_flashlight_cycle = Input.is_action_pressed("player_flashlight_cycle")
 	# compute repeated input just once (valid the first frame it was pressed)
 	input_up_once = not _up and input_up
 	input_down_once = not _down and input_down
@@ -80,6 +87,7 @@ func process_input(_delta: float):
 	input_right_once = not _right and input_right
 	input_jump_once = not _jump and input_jump
 	input_flashlight_once = not _flashlight and input_flashlight
+	input_flashlight_cycle_once = not _flashlight_cycle and input_flashlight_cycle
 	# remember we pressed these inputs last frame
 	_up = input_up
 	_down = input_down
@@ -87,6 +95,7 @@ func process_input(_delta: float):
 	_right = input_right
 	_jump = input_jump
 	_flashlight = input_flashlight
+	_flashlight_cycle = input_flashlight_cycle
 	# compute input velocity
 	input_velocity = Vector2(int(input_right) - int(input_left), int(input_down) - int(input_up))
 
@@ -103,6 +112,31 @@ func process_velocity(delta: float):
 	# ignore horizontal velocity change
 	velocity.x = velocity_prev.x
 
+# process_flashlight updates flashlight type and checks entities to be lit.
+# @impure
+var lit_entities := []
+func process_flashlight(delta: float):
+	if flashlight and input_flashlight_cycle_once:
+		set_flashlight_type(Constants.LightTypes.Spectral if flashlight_type == Constants.LightTypes.Normal else Constants.LightTypes.Normal)
+	if flashlight:
+		for node in lit_entities:
+			node.lit_pick = false
+		for area in PlayerFlashlightCollision.get_overlapping_areas():
+			var node: Node = area.get_parent()
+			if node is EntityNode:
+				if not lit_entities.has(node):
+					if node.can_be_lit(flashlight_type):
+						node.lit_pick = true
+						node.on_light_start(flashlight_type)
+						lit_entities.push_back(node)
+				elif node.can_be_lit(flashlight_type):
+						node.lit_pick = true
+						node.on_light_process(delta, flashlight_type)
+		for node in lit_entities:
+			if not node.lit_pick:
+				node.on_light_finish(flashlight_type)
+				lit_entities.erase(node)
+
 ###
 # Player gameplay
 ###
@@ -112,6 +146,29 @@ func process_velocity(delta: float):
 func set_flashlight(new_flashlight: bool):
 	flashlight = new_flashlight
 	PlayerFlashlight.enabled = new_flashlight
+	PlayerAmbientLight.enabled = new_flashlight
+	PlayerFlashlightCollision.monitoring = new_flashlight
+
+# set_flashlight changes the type of the flashlight (light or spectral light).
+# @param new_flashlight_type - Constants.LightTypes
+# @impure
+func set_flashlight_type(new_flashlight_type: int):
+	flashlight_type = new_flashlight_type
+	match flashlight_type:
+		Constants.LightTypes.Normal:
+			PlayerFlashlight.color = Color.white
+			PlayerFlashlight.range_item_cull_mask = Constants.LightTypes.Normal
+			PlayerFlashlight.shadow_item_cull_mask = Constants.LightTypes.Normal
+			PlayerAmbientLight.color = Color.white
+			PlayerAmbientLight.range_item_cull_mask = Constants.LightTypes.Normal
+			PlayerAmbientLight.shadow_item_cull_mask = Constants.LightTypes.Normal
+		Constants.LightTypes.Spectral:
+			PlayerFlashlight.color = Color.cornflower
+			PlayerFlashlight.range_item_cull_mask = Constants.LightTypes.Spectral
+			PlayerFlashlight.shadow_item_cull_mask = Constants.LightTypes.Spectral
+			PlayerAmbientLight.color = Color.white
+			PlayerAmbientLight.range_item_cull_mask = Constants.LightTypes.Spectral
+			PlayerAmbientLight.shadow_item_cull_mask = Constants.LightTypes.Spectral
 
 ###
 # Player helpers
