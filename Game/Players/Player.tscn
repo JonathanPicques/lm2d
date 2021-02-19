@@ -1,0 +1,105 @@
+[gd_scene load_steps=21 format=2]
+
+[ext_resource path="res://Game/Players/Anims/A_Luigi_Walk.tres" type="Animation" id=1]
+[ext_resource path="res://Game/Players/Anims/A_Luigi_Stand.tres" type="Animation" id=2]
+[ext_resource path="res://Game/Players/Textures/TA_Luigi.png" type="Texture" id=3]
+[ext_resource path="res://Game/Players/Player.gd" type="Script" id=4]
+[ext_resource path="res://Game/Players/States/PlayerFSM.gd" type="Script" id=5]
+[ext_resource path="res://Game/Players/States/Nodes/stand.gd" type="Script" id=6]
+[ext_resource path="res://Game/Players/States/Nodes/fall.gd" type="Script" id=7]
+[ext_resource path="res://Game/Players/Anims/A_Luigi_Fall.tres" type="Animation" id=8]
+[ext_resource path="res://Game/Players/States/Nodes/walk.gd" type="Script" id=9]
+[ext_resource path="res://Game/Players/States/Nodes/floor_turn.gd" type="Script" id=10]
+[ext_resource path="res://Game/Players/States/Nodes/jump.gd" type="Script" id=11]
+[ext_resource path="res://Game/Players/Anims/A_Luigi_Jump.tres" type="Animation" id=12]
+[ext_resource path="res://Game/Players/Textures/T_Flashlight.png" type="Texture" id=13]
+[ext_resource path="res://Game/Players/Textures/Vacuum/T_Luigi_Vacuum.png" type="Texture" id=14]
+[ext_resource path="res://Game/Players/States/Nodes/toggle_flashlight.gd" type="Script" id=15]
+[ext_resource path="res://Game/Players/Anims/A_Luigi_StandFlashlight.tres" type="Animation" id=16]
+[ext_resource path="res://Game/Players/Anims/A_Luigi_WalkFlashlight.tres" type="Animation" id=17]
+[ext_resource path="res://Game/Players/Anims/A_Luigi_FallFlashlight.tres" type="Animation" id=18]
+[ext_resource path="res://Game/Players/Anims/A_Luigi_JumpFlashlight.tres" type="Animation" id=19]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 7, 14 )
+
+[node name="Player" type="KinematicBody2D"]
+script = ExtResource( 4 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = -20.0
+margin_top = -48.0
+margin_right = 20.0
+margin_bottom = -34.0
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Orientation" type="Node2D" parent="."]
+
+[node name="Flashlight" type="Light2D" parent="Orientation"]
+position = Vector2( 11, -11 )
+enabled = false
+texture = ExtResource( 13 )
+offset = Vector2( 48, 0 )
+shadow_enabled = true
+shadow_filter = 4
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="PlayerSprite" type="Sprite" parent="Orientation"]
+light_mask = 0
+z_index = 1
+texture = ExtResource( 3 )
+centered = false
+offset = Vector2( -8, -32 )
+region_enabled = true
+region_rect = Rect2( 3, 41, 14, 32 )
+
+[node name="VacuumSprite" type="Sprite" parent="Orientation"]
+position = Vector2( 1, -23 )
+z_as_relative = false
+texture = ExtResource( 14 )
+
+[node name="CollisionBody" type="CollisionShape2D" parent="."]
+position = Vector2( 0, -15 )
+shape = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource( 5 )
+
+[node name="stand" type="Node" parent="StateMachine"]
+script = ExtResource( 6 )
+
+[node name="fall" type="Node" parent="StateMachine"]
+script = ExtResource( 7 )
+
+[node name="walk" type="Node" parent="StateMachine"]
+script = ExtResource( 9 )
+
+[node name="floor_turn" type="Node" parent="StateMachine"]
+script = ExtResource( 10 )
+
+[node name="jump" type="Node" parent="StateMachine"]
+script = ExtResource( 11 )
+
+[node name="toggle_flashlight" type="Node" parent="StateMachine"]
+script = ExtResource( 15 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "stand"
+playback_speed = 2.0
+anims/fall = ExtResource( 8 )
+anims/fall_flashlight = ExtResource( 18 )
+anims/jump = ExtResource( 12 )
+anims/jump_flashlight = ExtResource( 19 )
+anims/stand = ExtResource( 2 )
+anims/stand_flashlight = ExtResource( 16 )
+anims/walk = ExtResource( 1 )
+anims/walk_flashlight = ExtResource( 17 )

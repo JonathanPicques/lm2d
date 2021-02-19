@@ -1,0 +1,5 @@
+# Godot
+build/
+.import/
+export.cfg
+export_presets.cfg
