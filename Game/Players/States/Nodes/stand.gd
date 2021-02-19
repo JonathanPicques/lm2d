@@ -8,8 +8,10 @@ func process_state(delta: float):
 	player_node.handle_deceleration_move(delta, player_node.RUN_DECELERATION)
 	if not player_node.is_on_floor():
 		return player_node.fsm.state_nodes.fall
-	if player_node.input_jump_once and player_node.is_able_to_jump() and not player_node.is_on_ceiling_passive():
+	if player_node.input_jump_once and player_node.is_able_to_jump():
 		return player_node.fsm.state_nodes.jump
+	if player_node.input_velocity.x != 0 and player_node.has_same_direction(player_node.direction, player_node.input_velocity.x) and player_node.is_on_wall_passive():
+		return player_node.fsm.state_nodes.push_wall
 	if player_node.input_velocity.x != 0 and player_node.has_same_direction(player_node.direction, player_node.input_velocity.x) and not player_node.is_on_wall_passive():
 		return player_node.fsm.state_nodes.walk
 	if player_node.input_velocity.x != 0 and not player_node.has_same_direction(player_node.direction, player_node.input_velocity.x):

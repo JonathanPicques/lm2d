@@ -119,26 +119,35 @@ func process_velocity(delta: float):
 	)
 
 ###
+# Player gameplay
+###
+
+# set_flashlight hides or shows the flashlight cone.
+# @impure
+func set_flashlight(new_flashlight: bool):
+	flashlight = new_flashlight
+	PlayerFlashlight.enabled = new_flashlight
+
+###
 # Player helpers
 ###
 
-# set_direction changes the Player direction and flips the sprite accordingly.
+# set_direction changes the player direction and flips the sprite accordingly.
 # @impure
 func set_direction(new_direction: int):
 	direction = new_direction
 	PlayerOrientation.scale.x = abs(PlayerOrientation.scale.x) * sign(direction)
 
-# set_animation changes the Player animation.
+# set_animation changes the player animation.
 # @impure
-func set_animation(new_animation: String, play_from_frame := -1):
-	var animation_name := new_animation if not flashlight else "%s_flashlight" % new_animation
-	
-	if not is_animation_playing(animation_name):
-		PlayerAnimationPlayer.play(animation_name)
+func set_animation(animation_name: String, play_from_frame := -1):
+	var new_animation_name := animation_name if not flashlight else "%s_flashlight" % animation_name
+	if not is_animation_playing(new_animation_name):
+		PlayerAnimationPlayer.play(new_animation_name)
 	if play_from_frame != -1:
 		var animation := PlayerAnimationPlayer.get_animation(PlayerAnimationPlayer.current_animation)
 		var track_time := animation.track_get_key_time(animation.find_track("Sprite:frame"), play_from_frame)
-		PlayerAnimationPlayer.play(animation_name)
+		PlayerAnimationPlayer.play(new_animation_name)
 		PlayerAnimationPlayer.seek(track_time, true)
 
 # is_animation_playing returns true if the given animation is playing.
@@ -150,12 +159,6 @@ func is_animation_playing(animation: String) -> bool:
 # @pure
 func is_animation_finished() -> bool:
 	return not PlayerAnimationPlayer.is_playing()
-
-# set_flashlight hides or shows the flashlight cone.
-# @impure
-func set_flashlight(new_flashlight: bool):
-	flashlight = new_flashlight
-	PlayerFlashlight.enabled = new_flashlight
 
 ###
 # Movement helpers

@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://Game/Players/Anims/A_Luigi_Walk.tres" type="Animation" id=1]
 [ext_resource path="res://Game/Players/Anims/A_Luigi_Stand.tres" type="Animation" id=2]
@@ -19,9 +19,67 @@
 [ext_resource path="res://Game/Players/Anims/A_Luigi_WalkFlashlight.tres" type="Animation" id=17]
 [ext_resource path="res://Game/Players/Anims/A_Luigi_FallFlashlight.tres" type="Animation" id=18]
 [ext_resource path="res://Game/Players/Anims/A_Luigi_JumpFlashlight.tres" type="Animation" id=19]
+[ext_resource path="res://Game/Players/States/Nodes/skid.gd" type="Script" id=20]
+[ext_resource path="res://Game/Players/Anims/A_Luigi_FloorTurn.tres" type="Animation" id=21]
+[ext_resource path="res://Game/Players/Anims/A_Luigi_FloorTurn_Flashlight.tres" type="Animation" id=22]
+[ext_resource path="res://Game/Players/States/Nodes/push_wall.gd" type="Script" id=23]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 7, 14 )
+
+[sub_resource type="Animation" id=2]
+resource_name = "skid"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Orientation/PlayerSprite:region_rect")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Rect2( 3, 3, 20, 32 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Orientation/PlayerSprite:offset")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( -9, -32 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "skid_flashlight"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Orientation/PlayerSprite:region_rect")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Rect2( 29, 3, 22, 32 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Orientation/PlayerSprite:offset")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( -9, -32 ) ]
+}
 
 [node name="Player" type="KinematicBody2D"]
 script = ExtResource( 4 )
@@ -55,9 +113,9 @@ light_mask = 0
 z_index = 1
 texture = ExtResource( 3 )
 centered = false
-offset = Vector2( -8, -32 )
+offset = Vector2( -9, -32 )
 region_enabled = true
-region_rect = Rect2( 3, 41, 14, 32 )
+region_rect = Rect2( 29, 3, 22, 32 )
 
 [node name="VacuumSprite" type="Sprite" parent="Orientation"]
 position = Vector2( 1, -23 )
@@ -77,8 +135,8 @@ script = ExtResource( 5 )
 [node name="stand" type="Node" parent="StateMachine"]
 script = ExtResource( 6 )
 
-[node name="fall" type="Node" parent="StateMachine"]
-script = ExtResource( 7 )
+[node name="skid" type="Node" parent="StateMachine"]
+script = ExtResource( 20 )
 
 [node name="walk" type="Node" parent="StateMachine"]
 script = ExtResource( 9 )
@@ -86,8 +144,14 @@ script = ExtResource( 9 )
 [node name="floor_turn" type="Node" parent="StateMachine"]
 script = ExtResource( 10 )
 
+[node name="fall" type="Node" parent="StateMachine"]
+script = ExtResource( 7 )
+
 [node name="jump" type="Node" parent="StateMachine"]
 script = ExtResource( 11 )
+
+[node name="push_wall" type="Node" parent="StateMachine"]
+script = ExtResource( 23 )
 
 [node name="toggle_flashlight" type="Node" parent="StateMachine"]
 script = ExtResource( 15 )
@@ -97,8 +161,12 @@ autoplay = "stand"
 playback_speed = 2.0
 anims/fall = ExtResource( 8 )
 anims/fall_flashlight = ExtResource( 18 )
+anims/floor_turn = ExtResource( 21 )
+anims/floor_turn_flashlight = ExtResource( 22 )
 anims/jump = ExtResource( 12 )
 anims/jump_flashlight = ExtResource( 19 )
+anims/skid = SubResource( 2 )
+anims/skid_flashlight = SubResource( 3 )
 anims/stand = ExtResource( 2 )
 anims/stand_flashlight = ExtResource( 16 )
 anims/walk = ExtResource( 1 )

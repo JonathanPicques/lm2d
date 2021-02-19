@@ -2,7 +2,6 @@ extends PlayerFiniteStateMachineNode
 
 func start_state():
 	player_node.set_animation("floor_turn")
-	player_node.set_direction(-player_node.direction)
 
 func process_state(delta: float):
 	player_node.handle_gravity(delta, player_node.GRAVITY_MAX_SPEED, player_node.GRAVITY_ACCELERATION)
@@ -10,9 +9,12 @@ func process_state(delta: float):
 	if not player_node.is_on_floor():
 		player_node.set_direction(-player_node.direction)
 		return player_node.fsm.state_nodes.fall
-	if player_node.has_same_direction(player_node.direction, player_node.input_velocity.x):
-		return player_node.fsm.state_nodes.walk
-	if player_node.input_jump_once and player_node.is_able_to_jump() and not player_node.is_on_ceiling_passive():
+	if player_node.input_jump_once and player_node.is_able_to_jump():
+		player_node.set_direction(-player_node.direction)
 		return player_node.fsm.state_nodes.jump
+	if player_node.has_same_direction(player_node.direction, player_node.input_velocity.x):
+		player_node.set_direction(-player_node.direction)
+		return player_node.fsm.state_nodes.walk
 	if player_node.velocity.x == 0:
+		player_node.set_direction(-player_node.direction)
 		return player_node.fsm.state_nodes.walk
