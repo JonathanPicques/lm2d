@@ -13,7 +13,7 @@ func process_state(delta: float):
 	if player_node.input_velocity.x != 0 and player_node.has_invert_direction(player_node.direction, player_node.input_velocity.x):
 		return player_node.fsm.state_nodes.floor_turn
 	if player_node.input_velocity.x != 0 and player_node.is_on_wall():
-		return player_node.fsm.state_nodes.stand
+		return player_node.fsm.state_nodes.push_wall
 	if player_node.input_velocity.x == 0 and player_node.velocity.x != 0:
 		return player_node.fsm.state_nodes.skid
 	if player_node.input_velocity.x == 0 and player_node.velocity.x == 0:

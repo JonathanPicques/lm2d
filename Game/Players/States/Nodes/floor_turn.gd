@@ -1,6 +1,9 @@
 extends PlayerFiniteStateMachineNode
 
 func start_state():
+	if player_node.velocity.x == 0:
+		player_node.set_direction(-player_node.direction)
+		return player_node.fsm.state_nodes.walk
 	player_node.set_animation("floor_turn")
 
 func process_state(delta: float):

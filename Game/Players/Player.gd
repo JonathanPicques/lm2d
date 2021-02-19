@@ -2,10 +2,10 @@ extends KinematicBody2D
 class_name PlayerNode
 
 const FLOOR := Vector2(0, -1) # floor direction.
-const FLOOR_SNAP := Vector2(0, 5) # floor snap for slopes.
+const FLOOR_SNAP := Vector2(0, 15) # floor snap for slopes.
+const FLOOR_MAX_ANGLE := deg2rad(46)
 const FLOOR_SNAP_DISABLED := Vector2() # no floor snap for slopes.
 const FLOOR_SNAP_DISABLE_TIME := 0.1 # time during snapping is disabled.
-const FALLING_VELOCITY_THRESHOLD := 5.0 # velocity were we consider the player is falling
 
 const JUMP_STRENGTH := -240.0
 const CEILING_KNOCKDOWN := 0.0
@@ -92,31 +92,16 @@ func process_input(delta: float):
 
 # process_velocity updates player position after applying velocity.
 # @impure
-var _was_on_floor := false
 func process_velocity(delta: float):
 	# decrement snapping time if applicable
 	if disable_snap > 0:
 		disable_snap = max(disable_snap - delta, 0)
-	# save old position
-	var old_position := position
-	# stop movement to avoid sloppy stutters in kinematic body
-	if not _was_on_floor and is_on_floor():
-		for i in get_slide_count():
-			var collision := get_slide_collision(i)
-			if is_nearly(velocity_prev.x, 0) and is_nearly(input_velocity.x, 0) and collision.normal != FLOOR:
-				velocity = Vector2()
-	# save last frame floor status
-	_was_on_floor = is_on_floor()
-	# save last frame velocity
-	velocity_prev = velocity
+	# save previous velocity
+	var velocity_prev := velocity
 	# apply movement (and disable snap for jumping)
-	velocity = move_and_slide_with_snap(velocity, FLOOR_SNAP if disable_snap == 0 else FLOOR_SNAP_DISABLED, FLOOR, true)
-	# compute real velocity offset without taking too small values into account
-	var offset := position - old_position
-	velocity_offset = Vector2(
-		0.0 if is_nearly(offset.x, 0) else velocity.x,
-		0.0 if is_nearly(offset.y, 0) else velocity.y
-	)
+	velocity = move_and_slide_with_snap(velocity, FLOOR_SNAP if disable_snap == 0 else FLOOR_SNAP_DISABLED, FLOOR, true, 4, FLOOR_MAX_ANGLE)
+	# ignore horizontal velocity change
+	velocity.x = velocity_prev.x
 
 ###
 # Player gameplay
@@ -173,10 +158,7 @@ func handle_jump(strength: float):
 # handle_gravity applies gravity to the velocity.
 # @impure
 func handle_gravity(delta: float, max_speed: float, acceleration: float):
-	if not is_on_floor():
-		velocity.y = move_toward(velocity.y, max_speed, delta * acceleration)
-	elif velocity.x == 0 and input_velocity.x == 0:
-		velocity.y = 0
+	velocity.y = move_toward(velocity.y, max_speed, delta * acceleration)
 
 # handle_direction changes the direction depending on the input velocity.
 # @impure
@@ -214,22 +196,6 @@ func handle_deceleration_move(delta: float, deceleration: float):
 # @pure
 func is_able_to_jump() -> bool:
 	return true
-
-# is_on_wall_passive returns true if there is a wall on the side.
-# @pure
-func is_on_wall_passive() -> bool:
-	return test_move(transform, Vector2(direction, 0))
-
-# is_on_ceiling_passive returns true if there is a ceiling upward.
-# @pure
-func is_on_ceiling_passive() -> bool:
-	# if PlayerCeilingChecker.is_colliding():
-	#	var collider := PlayerCeilingChecker.get_collider()
-	#	if collider is KinematicBody2D:
-	#		# TODO: return true only if collider is not a one-way platform
-	#		return false
-	#	return false
-	return false
 
 ###
 # Maths helpers
