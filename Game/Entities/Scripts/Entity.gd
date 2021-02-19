@@ -19,8 +19,7 @@ func on_interact():
 # Lighting (react to light or spectral light)
 ###
 
-var lit_time := 0.0
-var lit_pick := false
+var lit_pick := false # Helper flag for player
 
 # can_be_lit returns whether the player can lit this entity.
 # @param light_type - Constants.LightType
@@ -37,8 +36,8 @@ func on_light_start(_light_type: int):
 # on_light_process is called when the player's light collides with this entity.
 # @param light_type - Constants.LightType
 # @impure
-func on_light_process(delta: float, _light_type: int):
-	lit_time += delta
+func on_light_process(_delta: float, _light_type: int):
+	pass
 
 # on_light_finish is called when the player's light leaves this entity.
 # @param light_type - Constants.LightType
@@ -50,19 +49,17 @@ func on_light_finish(_light_type: int):
 # Player vacuuming
 ###
 
-var vacuum_time := 0.0
-
 # on_vacuum_start is called when the player's vacuum enters this entity.
 # @impure
 func on_vacuum_start():
-	vacuum_time = 0.0
+	pass
 
 # on_vacuum_process is called when the player's vacuum collides with this entity.
 # @impure
-func on_vacuum_process(delta: float):
-	vacuum_time += delta
+func on_vacuum_process(_delta: float):
+	pass
 
 # on_vacuum_finish is called when the player's vacuum leaves this entity.
 # @impure
 func on_vacuum_finish():
-	vacuum_time = 0.0
+	pass

@@ -3,7 +3,7 @@ class_name PlayerNode
 
 const FLOOR := Vector2(0, -1) # floor direction.
 const FLOOR_SNAP := Vector2(0, 15) # floor snap for slopes.
-const FLOOR_MAX_ANGLE := deg2rad(46)
+const FLOOR_MAX_ANGLE := deg2rad(45) # floor max walkable angle.
 const FLOOR_SNAP_DISABLED := Vector2() # no floor snap for slopes.
 const FLOOR_SNAP_DISABLE_TIME := 0.1 # time during snapping is disabled.
 
@@ -24,13 +24,14 @@ var input_velocity := Vector2()
 var velocity_offset := Vector2()
 
 var flashlight := false
-var flashlight_type = Constants.LightTypes.Normal
+var flashlight_type = Constants.LightType.Normal
 
 var input_up := false
 var input_down := false
 var input_left := false
 var input_right := false
 var input_jump := false
+var input_interact := false
 var input_flashlight := false
 var input_flashlight_cycle := false
 
@@ -39,6 +40,7 @@ var input_down_once := false
 var input_left_once := false
 var input_right_once := false
 var input_jump_once := false
+var input_interact_once := false
 var input_flashlight_once := false
 var input_flashlight_cycle_once := false
 
@@ -47,7 +49,8 @@ onready var PlayerFlashlight: Light2D = $Orientation/Flashlight
 onready var PlayerOrientation: Node2D = $Orientation
 onready var PlayerAmbientLight: Light2D = $Orientation/AmbientLight
 onready var PlayerAnimationPlayer: AnimationPlayer = $AnimationPlayer
-onready var PlayerFlashlightCollision: Area2D = $Orientation/Flashlight/Collision
+onready var PlayerInteractableArea: Area2D = $CollisionBody/InteractableArea
+onready var PlayerFlashlightLightableArea: Area2D = $Orientation/Flashlight/LightableArea
 
 onready var fsm := PlayerFiniteStateMachineObject.new(self, $StateMachine, $StateMachine/stand)
 
@@ -63,14 +66,14 @@ func _physics_process(delta: float):
 	process_input(delta)
 	process_velocity(delta)
 	process_flashlight(delta)
+	process_interaction(delta)
 	fsm.process_state_machine(delta)
-	# debug
-	$Label.text = fsm.current_state_node.name
 
 # process_input updates player inputs.
 # @impure
 var _up := false; var _down := false; var _left := false; var _right := false;
-var _jump := false; var _flashlight := false; var _flashlight_cycle := false
+var _jump := false; var _interact := false
+var _flashlight := false; var _flashlight_cycle := false
 func process_input(_delta: float):
 	# compute frame input
 	input_up = Input.is_action_pressed("player_up")
@@ -78,6 +81,7 @@ func process_input(_delta: float):
 	input_down = Input.is_action_pressed("player_down")
 	input_right = Input.is_action_pressed("player_right")
 	input_jump = Input.is_action_pressed("player_jump")
+	input_interact = Input.is_action_pressed("player_interact")
 	input_flashlight = Input.is_action_pressed("player_flashlight")
 	input_flashlight_cycle = Input.is_action_pressed("player_flashlight_cycle")
 	# compute repeated input just once (valid the first frame it was pressed)
@@ -86,6 +90,7 @@ func process_input(_delta: float):
 	input_left_once = not _left and input_left
 	input_right_once = not _right and input_right
 	input_jump_once = not _jump and input_jump
+	input_interact_once = not _interact and input_interact
 	input_flashlight_once = not _flashlight and input_flashlight
 	input_flashlight_cycle_once = not _flashlight_cycle and input_flashlight_cycle
 	# remember we pressed these inputs last frame
@@ -94,6 +99,7 @@ func process_input(_delta: float):
 	_left = input_left
 	_right = input_right
 	_jump = input_jump
+	_interact = input_interact
 	_flashlight = input_flashlight
 	_flashlight_cycle = input_flashlight_cycle
 	# compute input velocity
@@ -117,11 +123,11 @@ func process_velocity(delta: float):
 var lit_entities := []
 func process_flashlight(delta: float):
 	if flashlight and input_flashlight_cycle_once:
-		set_flashlight_type(Constants.LightTypes.Spectral if flashlight_type == Constants.LightTypes.Normal else Constants.LightTypes.Normal)
+		set_flashlight_type(Constants.LightType.Spectral if flashlight_type == Constants.LightType.Normal else Constants.LightType.Normal)
 	if flashlight:
 		for node in lit_entities:
 			node.lit_pick = false
-		for area in PlayerFlashlightCollision.get_overlapping_areas():
+		for area in PlayerFlashlightLightableArea.get_overlapping_areas():
 			var node: Node = area.get_parent()
 			if node is EntityNode:
 				if not lit_entities.has(node):
@@ -137,6 +143,16 @@ func process_flashlight(delta: float):
 				node.on_light_finish(flashlight_type)
 				lit_entities.erase(node)
 
+# process_interaction checks interactable entities.
+# @impure
+func process_interaction(_delta: float):
+	var areas = PlayerInteractableArea.get_overlapping_areas()
+	for area in areas:
+		var node: Node = area.get_parent()
+		if node is EntityNode:
+			if input_interact_once and node.can_interact():
+				node.on_interact()
+
 ###
 # Player gameplay
 ###
@@ -147,28 +163,28 @@ func set_flashlight(new_flashlight: bool):
 	flashlight = new_flashlight
 	PlayerFlashlight.enabled = new_flashlight
 	PlayerAmbientLight.enabled = new_flashlight
-	PlayerFlashlightCollision.monitoring = new_flashlight
+	PlayerFlashlightLightableArea.monitoring = new_flashlight
 
 # set_flashlight changes the type of the flashlight (light or spectral light).
-# @param new_flashlight_type - Constants.LightTypes
+# @param new_flashlight_type - Constants.LightType
 # @impure
 func set_flashlight_type(new_flashlight_type: int):
 	flashlight_type = new_flashlight_type
 	match flashlight_type:
-		Constants.LightTypes.Normal:
+		Constants.LightType.Normal:
 			PlayerFlashlight.color = Color.white
-			PlayerFlashlight.range_item_cull_mask = Constants.LightTypes.Normal
-			PlayerFlashlight.shadow_item_cull_mask = Constants.LightTypes.Normal
+			PlayerFlashlight.range_item_cull_mask = Constants.LightType.Normal
+			PlayerFlashlight.shadow_item_cull_mask = Constants.LightType.Normal
 			PlayerAmbientLight.color = Color.white
-			PlayerAmbientLight.range_item_cull_mask = Constants.LightTypes.Normal
-			PlayerAmbientLight.shadow_item_cull_mask = Constants.LightTypes.Normal
-		Constants.LightTypes.Spectral:
+			PlayerAmbientLight.range_item_cull_mask = Constants.LightType.Normal
+			PlayerAmbientLight.shadow_item_cull_mask = Constants.LightType.Normal
+		Constants.LightType.Spectral:
 			PlayerFlashlight.color = Color.cornflower
-			PlayerFlashlight.range_item_cull_mask = Constants.LightTypes.Spectral
-			PlayerFlashlight.shadow_item_cull_mask = Constants.LightTypes.Spectral
+			PlayerFlashlight.range_item_cull_mask = Constants.LightType.Spectral
+			PlayerFlashlight.shadow_item_cull_mask = Constants.LightType.Spectral
 			PlayerAmbientLight.color = Color.white
-			PlayerAmbientLight.range_item_cull_mask = Constants.LightTypes.Spectral
-			PlayerAmbientLight.shadow_item_cull_mask = Constants.LightTypes.Spectral
+			PlayerAmbientLight.range_item_cull_mask = Constants.LightType.Spectral
+			PlayerAmbientLight.shadow_item_cull_mask = Constants.LightType.Spectral
 
 ###
 # Player helpers

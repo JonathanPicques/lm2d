@@ -3,27 +3,27 @@
 [ext_resource path="res://Game/Players/Anims/A_Luigi_Walk.tres" type="Animation" id=1]
 [ext_resource path="res://Game/Players/Anims/A_Luigi_Stand.tres" type="Animation" id=2]
 [ext_resource path="res://Game/Players/Textures/TA_Luigi.png" type="Texture" id=3]
-[ext_resource path="res://Game/Players/Player.gd" type="Script" id=4]
-[ext_resource path="res://Game/Players/States/PlayerFSM.gd" type="Script" id=5]
-[ext_resource path="res://Game/Players/States/Nodes/stand.gd" type="Script" id=6]
-[ext_resource path="res://Game/Players/States/Nodes/fall.gd" type="Script" id=7]
+[ext_resource path="res://Game/Players/Scripts/Player.gd" type="Script" id=4]
+[ext_resource path="res://Game/Players/Scripts/PlayerFSM.gd" type="Script" id=5]
+[ext_resource path="res://Game/Players/Scripts/States/stand.gd" type="Script" id=6]
+[ext_resource path="res://Game/Players/Scripts/States/fall.gd" type="Script" id=7]
 [ext_resource path="res://Game/Players/Anims/A_Luigi_Fall.tres" type="Animation" id=8]
-[ext_resource path="res://Game/Players/States/Nodes/walk.gd" type="Script" id=9]
-[ext_resource path="res://Game/Players/States/Nodes/floor_turn.gd" type="Script" id=10]
-[ext_resource path="res://Game/Players/States/Nodes/jump.gd" type="Script" id=11]
+[ext_resource path="res://Game/Players/Scripts/States/walk.gd" type="Script" id=9]
+[ext_resource path="res://Game/Players/Scripts/States/floor_turn.gd" type="Script" id=10]
+[ext_resource path="res://Game/Players/Scripts/States/jump.gd" type="Script" id=11]
 [ext_resource path="res://Game/Players/Anims/A_Luigi_Jump.tres" type="Animation" id=12]
-[ext_resource path="res://Game/Effects/Flashlight.tscn" type="PackedScene" id=13]
+[ext_resource path="res://Game/Effects/Scenes/Flashlight.tscn" type="PackedScene" id=13]
 [ext_resource path="res://Game/Players/Textures/Vacuum/T_Luigi_Vacuum.png" type="Texture" id=14]
-[ext_resource path="res://Game/Players/States/Nodes/toggle_flashlight.gd" type="Script" id=15]
+[ext_resource path="res://Game/Players/Scripts/States/toggle_flashlight.gd" type="Script" id=15]
 [ext_resource path="res://Game/Players/Anims/A_Luigi_StandFlashlight.tres" type="Animation" id=16]
 [ext_resource path="res://Game/Players/Anims/A_Luigi_WalkFlashlight.tres" type="Animation" id=17]
 [ext_resource path="res://Game/Players/Anims/A_Luigi_FallFlashlight.tres" type="Animation" id=18]
 [ext_resource path="res://Game/Players/Anims/A_Luigi_JumpFlashlight.tres" type="Animation" id=19]
-[ext_resource path="res://Game/Players/States/Nodes/skid.gd" type="Script" id=20]
+[ext_resource path="res://Game/Players/Scripts/States/skid.gd" type="Script" id=20]
 [ext_resource path="res://Game/Players/Anims/A_Luigi_FloorTurn.tres" type="Animation" id=21]
 [ext_resource path="res://Game/Players/Anims/A_Luigi_FloorTurn_Flashlight.tres" type="Animation" id=22]
-[ext_resource path="res://Game/Players/States/Nodes/push_wall.gd" type="Script" id=23]
-[ext_resource path="res://Game/Effects/Small_Circle_Light.tscn" type="PackedScene" id=24]
+[ext_resource path="res://Game/Players/Scripts/States/push_wall.gd" type="Script" id=23]
+[ext_resource path="res://Game/Effects/Scenes/Small_Circle_Light.tscn" type="PackedScene" id=24]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 7, 14 )
@@ -86,30 +86,18 @@ tracks/1/keys = {
 collision_layer = 4
 script = ExtResource( 4 )
 
-[node name="Label" type="Label" parent="."]
-visible = false
-margin_left = -20.0
-margin_top = -48.0
-margin_right = 20.0
-margin_bottom = -34.0
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="Orientation" type="Node2D" parent="."]
 
 [node name="Flashlight" parent="Orientation" instance=ExtResource( 13 )]
 position = Vector2( 6, -11 )
 range_item_cull_mask = -2147483647
 
-[node name="Collision" type="Area2D" parent="Orientation/Flashlight"]
+[node name="LightableArea" type="Area2D" parent="Orientation/Flashlight"]
 monitorable = false
 collision_layer = 8
 collision_mask = 2147483649
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Orientation/Flashlight/Collision"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Orientation/Flashlight/LightableArea"]
 polygon = PoolVector2Array( -6, -3, 106, -25, 106, 25, -6, 3 )
 
 [node name="AmbientLight" parent="Orientation" instance=ExtResource( 24 )]
@@ -136,6 +124,17 @@ position = Vector2( 0, -15 )
 shape = SubResource( 1 )
 __meta__ = {
 "_edit_lock_": true
+}
+
+[node name="InteractableArea" type="Area2D" parent="CollisionBody"]
+monitorable = false
+collision_layer = 4
+collision_mask = 8
+
+[node name="CollisionBody" type="CollisionShape2D" parent="CollisionBody/InteractableArea"]
+shape = SubResource( 1 )
+__meta__ = {
+"_editor_description_": ""
 }
 
 [node name="StateMachine" type="Node" parent="."]
