@@ -20,11 +20,11 @@ const GRAVITY_ACCELERATION := 850.0
 var velocity := Vector2()
 var direction := 1
 var disable_snap := 0.0
-var velocity_prev := Vector2()
 var input_velocity := Vector2()
 var velocity_offset := Vector2()
 
 var flashlight := false
+var flashlight_type = Constants.LightTypes.Light
 
 var input_up := false
 var input_down := false
@@ -39,7 +39,7 @@ var input_right_once := false
 var input_jump_once := false
 var input_flashlight_once := false
 
-onready var PlayerSprite: Sprite = $Orientation/PlayerSpriteSprite
+onready var PlayerSprite: Sprite = $Orientation/PlayerSprite
 onready var PlayerFlashlight: Light2D = $Orientation/Flashlight
 onready var PlayerOrientation: Node2D = $Orientation
 onready var PlayerAnimationPlayer: AnimationPlayer = $AnimationPlayer
@@ -65,7 +65,7 @@ func _physics_process(delta: float):
 # @impure
 var _up := false; var _down := false; var _left := false; var _right := false;
 var _jump := false; var _flashlight := false
-func process_input(delta: float):
+func process_input(_delta: float):
 	# compute frame input
 	input_up = Input.is_action_pressed("player_up")
 	input_left = Input.is_action_pressed("player_left")

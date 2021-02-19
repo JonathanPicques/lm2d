@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/T_Flashlight.png-06bdd6111ca391a30ceb35f661862139.stex"
+path="res://.import/T_Entities.png-808076c4331c8ec90a59d537455b49a0.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Game/Players/Textures/T_Flashlight.png"
-dest_files=[ "res://.import/T_Flashlight.png-06bdd6111ca391a30ceb35f661862139.stex" ]
+source_file="res://Game/Entities/Textures/T_Entities.png"
+dest_files=[ "res://.import/T_Entities.png-808076c4331c8ec90a59d537455b49a0.stex" ]
 
 [params]
 

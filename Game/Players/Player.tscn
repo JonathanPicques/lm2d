@@ -12,7 +12,7 @@
 [ext_resource path="res://Game/Players/States/Nodes/floor_turn.gd" type="Script" id=10]
 [ext_resource path="res://Game/Players/States/Nodes/jump.gd" type="Script" id=11]
 [ext_resource path="res://Game/Players/Anims/A_Luigi_Jump.tres" type="Animation" id=12]
-[ext_resource path="res://Game/Players/Textures/T_Flashlight.png" type="Texture" id=13]
+[ext_resource path="res://Game/Effects/Flashlight.tscn" type="PackedScene" id=13]
 [ext_resource path="res://Game/Players/Textures/Vacuum/T_Luigi_Vacuum.png" type="Texture" id=14]
 [ext_resource path="res://Game/Players/States/Nodes/toggle_flashlight.gd" type="Script" id=15]
 [ext_resource path="res://Game/Players/Anims/A_Luigi_StandFlashlight.tres" type="Animation" id=16]
@@ -85,6 +85,7 @@ tracks/1/keys = {
 script = ExtResource( 4 )
 
 [node name="Label" type="Label" parent="."]
+visible = false
 margin_left = -20.0
 margin_top = -48.0
 margin_right = 20.0
@@ -97,19 +98,10 @@ __meta__ = {
 
 [node name="Orientation" type="Node2D" parent="."]
 
-[node name="Flashlight" type="Light2D" parent="Orientation"]
-position = Vector2( 11, -11 )
-enabled = false
-texture = ExtResource( 13 )
-offset = Vector2( 48, 0 )
-shadow_enabled = true
-shadow_filter = 4
-__meta__ = {
-"_editor_description_": ""
-}
+[node name="Flashlight" parent="Orientation" instance=ExtResource( 13 )]
+position = Vector2( 6, -11 )
 
 [node name="PlayerSprite" type="Sprite" parent="Orientation"]
-light_mask = 0
 z_index = 1
 texture = ExtResource( 3 )
 centered = false

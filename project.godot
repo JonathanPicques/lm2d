@@ -10,6 +10,16 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Node",
+"class": "ConstantsNode",
+"language": "GDScript",
+"path": "res://Game/Constants.gd"
+}, {
+"base": "Node2D",
+"class": "EntityNode",
+"language": "GDScript",
+"path": "res://Game/Entities/Entity.gd"
+}, {
+"base": "Node",
 "class": "PlayerFiniteStateMachineNode",
 "language": "GDScript",
 "path": "res://Game/Players/States/PlayerFSM_State.gd"
@@ -25,6 +35,8 @@ _global_script_classes=[ {
 "path": "res://Game/Players/Player.gd"
 } ]
 _global_script_class_icons={
+"ConstantsNode": "",
+"EntityNode": "",
 "PlayerFiniteStateMachineNode": "",
 "PlayerFiniteStateMachineObject": "",
 "PlayerNode": ""
@@ -34,6 +46,10 @@ _global_script_class_icons={
 
 config/name="Luigi Heart Attack"
 run/main_scene="res://Game/Levels/Debug.tscn"
+
+[autoload]
+
+Constants="*res://Game/Constants.tscn"
 
 [display]
 
@@ -104,6 +120,11 @@ player_flashlight={
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777238,"unicode":0,"echo":false,"script":null)
  ]
 }
+
+[layer_names]
+
+2d_render/layer_1="Light"
+2d_render/layer_2="SpectralLight"
 
 [rendering]
 

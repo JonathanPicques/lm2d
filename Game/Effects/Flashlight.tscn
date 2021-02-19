@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Game/Effects/Textures/T_Flashlight.png" type="Texture" id=1]
+
+[node name="Flashlight" type="Light2D"]
+enabled = false
+texture = ExtResource( 1 )
+offset = Vector2( 48, 0 )
+shadow_enabled = true
+shadow_filter = 4
+__meta__ = {
+"_editor_description_": ""
+}

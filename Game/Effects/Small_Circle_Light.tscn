@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Game/Effects/Textures/T_Small_Circle_Light.png" type="Texture" id=1]
+
+[node name="Small_Circle_Light" type="Light2D"]
+texture = ExtResource( 1 )
+energy = 0.5
+shadow_enabled = true
+shadow_filter = 4
