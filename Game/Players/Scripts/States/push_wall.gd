@@ -11,3 +11,6 @@ func process_state(delta: float):
 		return player_node.fsm.state_nodes.jump
 	if player_node.input_velocity.x == 0 or not player_node.is_on_wall():
 		return player_node.fsm.state_nodes.stand
+	if player_node.has_invert_direction(player_node.velocity.x, player_node.input_velocity.x):
+		player_node.velocity.x = 0.0
+		return player_node.fsm.state_nodes.stand

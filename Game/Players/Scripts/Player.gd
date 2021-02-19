@@ -11,8 +11,9 @@ const JUMP_STRENGTH := -240.0
 const CEILING_KNOCKDOWN := 0.0
 
 const RUN_MAX_SPEED := 96.0
-const RUN_ACCELERATION := 200.0
-const RUN_DECELERATION := 390.0
+const RUN_ACCELERATION := 180.0
+const RUN_DECELERATION := 280.0
+const RUN_DECELERATION_BRAKE := 1.6
 
 const GRAVITY_MAX_SPEED := 800.0
 const GRAVITY_ACCELERATION := 850.0
@@ -23,7 +24,7 @@ var disable_snap := 0.0
 var input_velocity := Vector2()
 var velocity_offset := Vector2()
 
-var flashlight := false
+var flashlight := true
 var flashlight_type = Constants.LightType.Normal
 
 var input_up := false
@@ -59,6 +60,7 @@ onready var fsm := PlayerFiniteStateMachineObject.new(self, $StateMachine, $Stat
 func _ready():
 	set_direction(direction)
 	set_flashlight(flashlight)
+	set_flashlight_type(flashlight_type)
 
 # _physics_process is called every physics tick and updates player state.
 # @impure
@@ -243,7 +245,7 @@ func handle_direction():
 # handle_floor_move applies acceleration or deceleration depending on the input_velocity on the floor.
 # @impure
 func handle_floor_move(delta: float, max_speed: float, acceleration: float, deceleration: float):
-	if has_same_direction(direction, input_velocity.x):
+	if velocity.x == 0 or has_same_direction(velocity.x, input_velocity.x):
 		velocity.x = get_acceleration(delta, velocity.x, max_speed, acceleration)
 	else:
 		handle_deceleration_move(delta, deceleration)
@@ -251,7 +253,7 @@ func handle_floor_move(delta: float, max_speed: float, acceleration: float, dece
 # handle_airborne_move applies acceleration or deceleration depending on the input_velocity while airborne.
 # @impure
 func handle_airborne_move(delta: float, max_speed: float, acceleration: float, deceleration: float):
-	if input_velocity.x != 0:
+	if velocity.x == 0 or has_same_direction(velocity.x, input_velocity.x):
 		velocity.x = get_acceleration(delta, velocity.x, max_speed, acceleration, input_velocity.x)
 	else:
 		handle_deceleration_move(delta, deceleration)
