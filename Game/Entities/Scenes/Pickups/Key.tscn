@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Game/Entities/Textures/T_Entities.png" type="Texture" id=1]
+[ext_resource path="res://Game/Entities/Scenes/Pickups/Key.gd" type="Script" id=2]
+
+[sub_resource type="PhysicsMaterial" id=1]
+bounce = 0.5
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 4, 8 )
+
+[node name="Key" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+position = Vector2( 1, 0 )
+collision_layer = 8
+mode = 2
+physics_material_override = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="RigidBody2D"]
+position = Vector2( -1, -8 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 320, 0, 16, 16 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+position = Vector2( -2, -8 )
+shape = SubResource( 2 )

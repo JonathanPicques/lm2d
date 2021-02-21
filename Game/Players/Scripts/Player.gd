@@ -1,6 +1,22 @@
 extends KinematicBody2D
 class_name PlayerNode
 
+###
+# Nodes
+###
+
+onready var PlayerSprite: Sprite = $Orientation/PlayerSprite
+onready var PlayerFlashlight: Light2D = $Orientation/Flashlight
+onready var PlayerOrientation: Node2D = $Orientation
+onready var PlayerAmbientLight: Light2D = $Orientation/AmbientLight
+onready var PlayerAnimationPlayer: AnimationPlayer = $AnimationPlayer
+onready var PlayerInteractableArea: Area2D = $CollisionBody/InteractableArea
+onready var PlayerFlashlightLightableArea: Area2D = $Orientation/Flashlight/LightableArea
+
+###
+# Movement constants
+###
+
 const FLOOR := Vector2(0, -1) # floor direction.
 const FLOOR_SNAP := Vector2(0, 15) # floor snap for slopes.
 const FLOOR_MAX_ANGLE := deg2rad(45) # floor max walkable angle.
@@ -18,14 +34,26 @@ const RUN_DECELERATION_BRAKE := 1.6
 const GRAVITY_MAX_SPEED := 800.0
 const GRAVITY_ACCELERATION := 850.0
 
+###
+# State
+###
+
+var state := PlayerStateResource.new()
+
 var velocity := Vector2()
 var direction := 1
 var disable_snap := 0.0
 var input_velocity := Vector2()
 var velocity_offset := Vector2()
 
-var flashlight := true
+var flashlight := false
 var flashlight_type = Constants.LightType.Normal
+
+onready var fsm := PlayerFiniteStateMachineObject.new(self, $StateMachine, $StateMachine/stand)
+
+###
+# Input
+###
 
 var input_up := false
 var input_down := false
@@ -44,16 +72,6 @@ var input_jump_once := false
 var input_interact_once := false
 var input_flashlight_once := false
 var input_flashlight_cycle_once := false
-
-onready var PlayerSprite: Sprite = $Orientation/PlayerSprite
-onready var PlayerFlashlight: Light2D = $Orientation/Flashlight
-onready var PlayerOrientation: Node2D = $Orientation
-onready var PlayerAmbientLight: Light2D = $Orientation/AmbientLight
-onready var PlayerAnimationPlayer: AnimationPlayer = $AnimationPlayer
-onready var PlayerInteractableArea: Area2D = $CollisionBody/InteractableArea
-onready var PlayerFlashlightLightableArea: Area2D = $Orientation/Flashlight/LightableArea
-
-onready var fsm := PlayerFiniteStateMachineObject.new(self, $StateMachine, $StateMachine/stand)
 
 # _ready is called when the player is ready.
 # @impure
