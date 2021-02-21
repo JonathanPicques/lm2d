@@ -12,6 +12,8 @@ func process_state(delta: float):
 	if not player_node.is_on_floor():
 		player_node.set_direction(-player_node.direction)
 		return player_node.fsm.state_nodes.fall
+	if player_node.input_flashlight_once:
+		return player_node.fsm.state_nodes.toggle_flashlight
 	if player_node.input_jump_once and player_node.is_able_to_jump():
 		player_node.set_direction(-player_node.direction)
 		return player_node.fsm.state_nodes.jump

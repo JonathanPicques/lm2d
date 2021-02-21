@@ -216,17 +216,23 @@ func set_direction(new_direction: int):
 	direction = new_direction
 	PlayerOrientation.scale.x = abs(PlayerOrientation.scale.x) * sign(direction)
 
-# set_animation changes the player animation.
+# set_animation changes the player animation to the given animation name.
 # @impure
-func set_animation(animation_name: String, play_from_frame := -1):
-	var new_animation_name := animation_name if not flashlight else "%s_flashlight" % animation_name
-	if not is_animation_playing(new_animation_name):
-		PlayerAnimationPlayer.play(new_animation_name)
-	if play_from_frame != -1:
-		var animation := PlayerAnimationPlayer.get_animation(PlayerAnimationPlayer.current_animation)
-		var track_time := animation.track_get_key_time(animation.find_track("Sprite:frame"), play_from_frame)
-		PlayerAnimationPlayer.play(new_animation_name)
-		PlayerAnimationPlayer.seek(track_time, true)
+func set_animation(animation_name: String):
+	var anim_name := animation_name
+	var anim_name_flashlight := "%s_flashlight" % animation_name
+	var current_anim_position := PlayerAnimationPlayer.current_animation_position
+	# try to keep animation time (walk -> walk_flashlight)
+	var anim_playing := is_animation_playing(anim_name)
+	var anim_flashlight_playing := is_animation_playing(anim_name_flashlight)
+	if flashlight:
+		PlayerAnimationPlayer.play(anim_name_flashlight)
+		if anim_playing:
+			PlayerAnimationPlayer.seek(current_anim_position, true)
+	else:
+		PlayerAnimationPlayer.play(anim_name)
+		if anim_flashlight_playing:
+			PlayerAnimationPlayer.seek(current_anim_position, true)
 
 # is_animation_playing returns true if the given animation is playing.
 # @impure
