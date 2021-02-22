@@ -2,6 +2,7 @@ extends PlayerFiniteStateMachineNode
 
 func start_state():
 	player_node.handle_jump(player_node.JUMP_STRENGTH)
+	player_node.play_fx_jump()
 	player_node.set_animation("jump")
 	if player_node.input_velocity.x != 0:
 		player_node.set_direction(int(sign(player_node.input_velocity.x)))

@@ -2,6 +2,8 @@ extends PlayerFiniteStateMachineNode
 
 func start_state():
 	player_node.set_animation("walk")
+	if player_node.fsm.prev_state_node == player_node.fsm.state_nodes.fall:
+		player_node.play_fx_land()
 
 func process_state(delta: float):
 	player_node.handle_gravity(delta, player_node.GRAVITY_MAX_SPEED, player_node.GRAVITY_ACCELERATION)

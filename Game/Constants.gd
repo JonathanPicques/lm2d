@@ -9,6 +9,12 @@ enum LightType { Normal = 1 << 0, Spectral = 1 << 1 }
 const LightTypeAll = LightType.Normal | LightType.Spectral
 
 ###
+# Physics constants
+###
+
+const PhysicsSleepLength := 5.0
+
+###
 # File namings conventions
 ###
 

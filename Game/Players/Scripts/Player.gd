@@ -324,3 +324,27 @@ func get_acceleration(delta: float, value: float, max_speed: float, acceleration
 # @pure
 func get_deceleration(delta: float, value: float, deceleration: float) -> float:
 	return move_toward(value, 0.0, deceleration * delta)
+
+###
+# Player effects
+###
+
+# @impure
+func play_fx_land():
+	$Sounds/StepSoundPlayer.play()
+
+# @impure
+func play_fx_step():
+	$Sounds/StepSoundPlayer.play()
+
+# @impure
+func play_fx_jump():
+	$Sounds/JumpSoundPlayer.play()
+
+# @impure
+func play_fx_floor_turn():
+	$Sounds/FloorTurnSoundPlayer.play()
+
+# @impure
+func play_fx_bump_ceiling():
+	pass

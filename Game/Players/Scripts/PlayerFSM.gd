@@ -10,11 +10,14 @@ var current_state_node: Node
 
 func _init(_player_node: Node, _parent_state_node: Node, _initial_state_node: Node):
 	player_node = _player_node
+	current_state_node = _initial_state_node
 	for i in range (0, _parent_state_node.get_child_count()):
 		var state_node := _parent_state_node.get_child(i)
 		state_node.player_node = _player_node
 		state_nodes[state_node.name] = state_node
-	set_state_node(_initial_state_node)
+	
+func _ready():
+	set_state_node(current_state_node)
 
 func set_state_node(state_node: Node):
 	if current_state_node:

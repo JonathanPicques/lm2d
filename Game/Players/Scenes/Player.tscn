@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://Game/Players/Anims/A_Luigi_Walk.tres" type="Animation" id=1]
 [ext_resource path="res://Game/Players/Anims/A_Luigi_Stand.tres" type="Animation" id=2]
@@ -24,6 +24,9 @@
 [ext_resource path="res://Game/Players/Anims/A_Luigi_FloorTurn_Flashlight.tres" type="Animation" id=22]
 [ext_resource path="res://Game/Players/Scripts/States/push_wall.gd" type="Script" id=23]
 [ext_resource path="res://Game/Effects/Scenes/Small_Circle_Light.tscn" type="PackedScene" id=24]
+[ext_resource path="res://Game/Effects/Audio/SND_StepGeneric.ogg" type="AudioStream" id=25]
+[ext_resource path="res://Game/Effects/Audio/SND_Jump.ogg" type="AudioStream" id=26]
+[ext_resource path="res://Game/Effects/Audio/SND_FloorTurn.ogg" type="AudioStream" id=27]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 7, 14 )
@@ -86,6 +89,20 @@ tracks/1/keys = {
 collision_layer = 4
 script = ExtResource( 4 )
 
+[node name="Sounds" type="Node2D" parent="."]
+
+[node name="StepSoundPlayer" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource( 25 )
+bus = "SFX"
+
+[node name="JumpSoundPlayer" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource( 26 )
+bus = "SFX"
+
+[node name="FloorTurnSoundPlayer" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource( 27 )
+bus = "SFX"
+
 [node name="Orientation" type="Node2D" parent="."]
 
 [node name="Flashlight" parent="Orientation" instance=ExtResource( 13 )]
@@ -115,9 +132,9 @@ texture = ExtResource( 14 )
 light_mask = 3
 texture = ExtResource( 3 )
 centered = false
-offset = Vector2( -8, -32 )
+offset = Vector2( -10, -31 )
 region_enabled = true
-region_rect = Rect2( 3, 41, 14, 32 )
+region_rect = Rect2( 3, 117, 22, 31 )
 
 [node name="CollisionBody" type="CollisionShape2D" parent="."]
 visible = false

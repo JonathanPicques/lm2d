@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/SND_StepGeneric.ogg-274e684d51058889850086acd0642647.oggstr"
+
+[deps]
+
+source_file="res://Game/Effects/Audio/SND_StepGeneric.ogg"
+dest_files=[ "res://.import/SND_StepGeneric.ogg-274e684d51058889850086acd0642647.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0
