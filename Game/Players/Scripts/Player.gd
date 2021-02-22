@@ -348,3 +348,7 @@ func play_fx_floor_turn():
 # @impure
 func play_fx_bump_ceiling():
 	pass
+
+# @impure
+func play_fx_toggle_flashlight():
+	$Sounds/FlashlightToggleSoundPlayer.play()

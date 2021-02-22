@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/SND_FlashlightToggle.ogg-4535a2ea329af15952afa440abf5ce4e.oggstr"
+
+[deps]
+
+source_file="res://Game/Effects/Audio/SND_FlashlightToggle.ogg"
+dest_files=[ "res://.import/SND_FlashlightToggle.ogg-4535a2ea329af15952afa440abf5ce4e.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

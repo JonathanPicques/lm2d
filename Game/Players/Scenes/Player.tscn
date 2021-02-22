@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://Game/Players/Anims/A_Luigi_Walk.tres" type="Animation" id=1]
 [ext_resource path="res://Game/Players/Anims/A_Luigi_Stand.tres" type="Animation" id=2]
@@ -27,6 +27,7 @@
 [ext_resource path="res://Game/Effects/Audio/SND_StepGeneric.ogg" type="AudioStream" id=25]
 [ext_resource path="res://Game/Effects/Audio/SND_Jump.ogg" type="AudioStream" id=26]
 [ext_resource path="res://Game/Effects/Audio/SND_FloorTurn.ogg" type="AudioStream" id=27]
+[ext_resource path="res://Game/Effects/Audio/SND_FlashlightToggle.ogg" type="AudioStream" id=28]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 7, 14 )
@@ -101,6 +102,10 @@ bus = "SFX"
 
 [node name="FloorTurnSoundPlayer" type="AudioStreamPlayer2D" parent="Sounds"]
 stream = ExtResource( 27 )
+bus = "SFX"
+
+[node name="FlashlightToggleSoundPlayer" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource( 28 )
 bus = "SFX"
 
 [node name="Orientation" type="Node2D" parent="."]
