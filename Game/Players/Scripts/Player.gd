@@ -131,12 +131,8 @@ func process_velocity(delta: float):
 	# decrement snapping time if applicable
 	if disable_snap > 0:
 		disable_snap = max(disable_snap - delta, 0)
-	# save previous velocity
-	var velocity_prev := velocity
 	# apply movement (and disable snap for jumping)
-	velocity = move_and_slide_with_snap(velocity, FLOOR_SNAP if disable_snap == 0 else FLOOR_SNAP_DISABLED, FLOOR, true, 4, FLOOR_MAX_ANGLE)
-	# ignore horizontal velocity change
-	velocity.x = velocity_prev.x
+	velocity.y = move_and_slide_with_snap(velocity, FLOOR_SNAP if disable_snap == 0 else FLOOR_SNAP_DISABLED, FLOOR, true, 4, FLOOR_MAX_ANGLE).y
 
 # process_flashlight updates flashlight type and checks entities to be lit.
 # @impure
@@ -295,6 +291,11 @@ func handle_deceleration_move(delta: float, deceleration: float):
 # @pure
 func is_able_to_jump() -> bool:
 	return true
+
+# is_on_wall_passive returns true if the player is really close to a wall.
+# @pure
+func is_on_wall_passive() -> bool:
+	return test_move(transform, Vector2(direction, 0.0))
 
 ###
 # Maths helpers
