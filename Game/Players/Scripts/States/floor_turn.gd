@@ -2,8 +2,10 @@ extends PlayerFiniteStateMachineNode
 
 func start_state():
 	player_node.set_animation("floor_turn")
-	if player_node.fsm.prev_state_node != player_node.fsm.state_nodes.toggle_flashlight:
-		player_node.play_fx_floor_turn()
+	if abs(player_node.velocity.x) > (player_node.RUN_MAX_SPEED / 2.0) \
+		and player_node.fsm.prev_state_node != player_node.fsm.state_nodes.skid \
+		and player_node.fsm.prev_state_node != player_node.fsm.state_nodes.toggle_flashlight:
+		player_node.play_fx_skid()
 	if player_node.velocity.x == 0:
 		player_node.set_direction(-player_node.direction)
 		return player_node.fsm.state_nodes.walk

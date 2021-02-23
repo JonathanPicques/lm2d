@@ -335,16 +335,16 @@ func play_fx_land():
 	$Sounds/StepSoundPlayer.play()
 
 # @impure
+func play_fx_skid():
+	$Sounds/SkidSoundPlayer.play()
+
+# @impure
 func play_fx_step():
 	$Sounds/StepSoundPlayer.play()
 
 # @impure
 func play_fx_jump():
 	$Sounds/JumpSoundPlayer.play()
-
-# @impure
-func play_fx_floor_turn():
-	$Sounds/FloorTurnSoundPlayer.play()
 
 # @impure
 func play_fx_bump_ceiling():

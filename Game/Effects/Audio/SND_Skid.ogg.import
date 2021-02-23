@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/SND_Skid.ogg-ef19addd7affd012e998e1e0e5ff9c5f.oggstr"
+
+[deps]
+
+source_file="res://Game/Effects/Audio/SND_Skid.ogg"
+dest_files=[ "res://.import/SND_Skid.ogg-ef19addd7affd012e998e1e0e5ff9c5f.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0
