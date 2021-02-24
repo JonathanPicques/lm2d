@@ -5,6 +5,7 @@ class_name PlayerNode
 # Nodes
 ###
 
+onready var PlayerTimer: Timer = $Timer
 onready var PlayerSprite: Sprite = $Orientation/PlayerSprite
 onready var PlayerFlashlight: Light2D = $Orientation/Flashlight
 onready var PlayerOrientation: Node2D = $Orientation
@@ -42,6 +43,7 @@ var state := PlayerStateResource.new()
 
 var velocity := Vector2()
 var direction := 1
+var expulse_dir := Vector2()
 var disable_snap := 0.0
 var input_velocity := Vector2()
 var velocity_offset := Vector2()
@@ -72,6 +74,10 @@ var input_jump_once := false
 var input_interact_once := false
 var input_flashlight_once := false
 var input_flashlight_cycle_once := false
+
+###
+# Player processing
+###
 
 # _ready is called when the player is ready.
 # @impure
@@ -173,6 +179,31 @@ func process_interaction(_delta: float):
 # Player gameplay
 ###
 
+# set_direction changes the player direction and flips the sprite accordingly.
+# @impure
+func set_direction(new_direction: int):
+	direction = new_direction
+	PlayerOrientation.scale.x = abs(PlayerOrientation.scale.x) * sign(direction)
+
+# set_animation changes the player animation to the given animation name.
+# @impure
+func set_animation(animation_name: String):
+	var anim_name := animation_name
+	var anim_name_flashlight := "%s_flashlight" % animation_name
+	var current_anim_position := PlayerAnimationPlayer.current_animation_position
+	# try to keep animation time (walk -> walk_flashlight)
+	var anim_playing := is_animation_playing(anim_name)
+	var anim_flashlight_playing := is_animation_playing(anim_name_flashlight)
+	if flashlight:
+		PlayerAnimationPlayer.play(anim_name_flashlight)
+		if anim_playing:
+			PlayerAnimationPlayer.seek(current_anim_position, true)
+	else:
+		PlayerAnimationPlayer.play(anim_name)
+		if anim_flashlight_playing:
+			PlayerAnimationPlayer.seek(current_anim_position, true)
+
+
 # set_flashlight hides or shows the flashlight cone.
 # @impure
 func set_flashlight(new_flashlight: bool):
@@ -206,29 +237,16 @@ func set_flashlight_type(new_flashlight_type: int):
 # Player helpers
 ###
 
-# set_direction changes the player direction and flips the sprite accordingly.
+# start_timer starts a timer for the given duration in seconds.
 # @impure
-func set_direction(new_direction: int):
-	direction = new_direction
-	PlayerOrientation.scale.x = abs(PlayerOrientation.scale.x) * sign(direction)
+func start_timer(duration: float):
+	PlayerTimer.wait_time = duration
+	PlayerTimer.start()
 
-# set_animation changes the player animation to the given animation name.
-# @impure
-func set_animation(animation_name: String):
-	var anim_name := animation_name
-	var anim_name_flashlight := "%s_flashlight" % animation_name
-	var current_anim_position := PlayerAnimationPlayer.current_animation_position
-	# try to keep animation time (walk -> walk_flashlight)
-	var anim_playing := is_animation_playing(anim_name)
-	var anim_flashlight_playing := is_animation_playing(anim_name_flashlight)
-	if flashlight:
-		PlayerAnimationPlayer.play(anim_name_flashlight)
-		if anim_playing:
-			PlayerAnimationPlayer.seek(current_anim_position, true)
-	else:
-		PlayerAnimationPlayer.play(anim_name)
-		if anim_flashlight_playing:
-			PlayerAnimationPlayer.seek(current_anim_position, true)
+# is_timer_finished returns true if the timer is finished.
+# @pure
+func is_timer_finished() -> bool:
+	return PlayerTimer.is_stopped()
 
 # is_animation_playing returns true if the given animation is playing.
 # @impure
@@ -248,6 +266,12 @@ func is_animation_finished() -> bool:
 # @impure
 func handle_jump(strength: float):
 	velocity.y = strength
+	disable_snap = FLOOR_SNAP_DISABLE_TIME
+
+# handle_expulse applies expulse strength and disable floor snapping for a little while.
+# @impure
+func handle_expulse(strength: float):
+	velocity = expulse_dir * strength
 	disable_snap = FLOOR_SNAP_DISABLE_TIME
 
 # handle_gravity applies gravity to the velocity.
