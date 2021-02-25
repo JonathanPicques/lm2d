@@ -57,6 +57,10 @@ run/main_scene="res://Game/Levels/Debug.tscn"
 
 Constants="*res://Game/Constants.tscn"
 
+[debug]
+
+gdscript/warnings/return_value_discarded=false
+
 [display]
 
 window/size/width=384

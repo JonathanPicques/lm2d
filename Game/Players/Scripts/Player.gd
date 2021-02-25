@@ -5,10 +5,11 @@ class_name PlayerNode
 # Nodes
 ###
 
-onready var PlayerTimer: Timer = $Timer
+onready var PlayerTween: Tween = $Tween
 onready var PlayerSprite: Sprite = $Orientation/PlayerSprite
 onready var PlayerFlashlight: Light2D = $Orientation/Flashlight
 onready var PlayerOrientation: Node2D = $Orientation
+onready var PlayerVacuumSprite: Sprite = $Orientation/VacuumSprite
 onready var PlayerAmbientLight: Light2D = $Orientation/AmbientLight
 onready var PlayerAnimationPlayer: AnimationPlayer = $AnimationPlayer
 onready var PlayerInteractableArea: Area2D = $CollisionBody/InteractableArea
@@ -203,7 +204,6 @@ func set_animation(animation_name: String):
 		if anim_flashlight_playing:
 			PlayerAnimationPlayer.seek(current_anim_position, true)
 
-
 # set_flashlight hides or shows the flashlight cone.
 # @impure
 func set_flashlight(new_flashlight: bool):
@@ -237,17 +237,6 @@ func set_flashlight_type(new_flashlight_type: int):
 # Player helpers
 ###
 
-# start_timer starts a timer for the given duration in seconds.
-# @impure
-func start_timer(duration: float):
-	PlayerTimer.wait_time = duration
-	PlayerTimer.start()
-
-# is_timer_finished returns true if the timer is finished.
-# @pure
-func is_timer_finished() -> bool:
-	return PlayerTimer.is_stopped()
-
 # is_animation_playing returns true if the given animation is playing.
 # @impure
 func is_animation_playing(animation: String) -> bool:
@@ -270,8 +259,8 @@ func handle_jump(strength: float):
 
 # handle_expulse applies expulse strength and disable floor snapping for a little while.
 # @impure
-func handle_expulse(strength: float):
-	velocity = expulse_dir * strength
+func handle_expulse():
+	velocity = expulse_dir
 	disable_snap = FLOOR_SNAP_DISABLE_TIME
 
 # handle_gravity applies gravity to the velocity.
@@ -349,6 +338,15 @@ func get_acceleration(delta: float, value: float, max_speed: float, acceleration
 # @pure
 func get_deceleration(delta: float, value: float, deceleration: float) -> float:
 	return move_toward(value, 0.0, deceleration * delta)
+
+###
+# Player interactions
+###
+
+func interaction_hurt(hurt_position: Vector2):
+	expulse_dir = Vector2(-120.0 if hurt_position.x > position.x else 120.0, -180.0)
+	set_direction(1 if hurt_position.x > position.x else -1)
+	fsm.set_state_node(fsm.state_nodes.expulse)
 
 ###
 # Player effects

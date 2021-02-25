@@ -91,7 +91,7 @@ tracks/1/keys = {
 collision_layer = 4
 script = ExtResource( 4 )
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Tween" type="Tween" parent="."]
 
 [node name="Sounds" type="Node2D" parent="."]
 
