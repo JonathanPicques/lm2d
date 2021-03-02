@@ -10,13 +10,15 @@ var save := GameSaveResource.new()
 # Debug
 ###
 
-func _process(delta):
+func _process(_delta: float):
 	if Input.is_action_just_pressed("debug_new_game"):
 		new_game()
 	elif Input.is_action_just_pressed("debug_load_game"):
 		load_game()
 	elif Input.is_action_just_pressed("debug_save_game"):
 		save_game()
+	elif Input.is_action_just_pressed("debug_erase_save"):
+		erase_save()
 
 ###
 # Load/Save
@@ -33,19 +35,28 @@ func new_game():
 # save_game is called to save the game to a file.
 # @impure
 func save_game():
+	# DEBUG: save luigi position
+	save.DEBUG_LUIGI_POS = get_child(0).find_node("Luigi").position
 	ResourceSaver.save(SAVE_GAME_PATH, save)
 
 # load_game is called to load the game from a file.
 # @impure
 func load_game() -> bool:
-	var existing_save = load(SAVE_GAME_PATH)
+	var existing_save = ResourceLoader.load(SAVE_GAME_PATH, "", true)
 	if existing_save:
 		# set the save resource
 		save = existing_save
 		# load the level from the save
 		load_level(save.level_path)
+		# DEBUG: load luigi position
+		get_child(0).find_node("Luigi").position = save.DEBUG_LUIGI_POS
 		return true
 	return false
+
+# erase_save erases the save game.
+# @impure
+func erase_save():
+	Directory.new().remove(SAVE_GAME_PATH)
 
 ###
 # Level
@@ -62,3 +73,19 @@ func load_level(level_path: String):
 		child.queue_free()
 	# load level
 	add_child(load(level_path).instance())
+
+###
+# Trackable entities
+###
+
+func open_chest(chest_id: int):
+	save.opened_chests[chest_id] = true
+
+func pickup_key(key_id: int):
+	save.picked_up_keys[key_id] = true
+
+func is_chest_opened(chest_id: int) -> bool:
+	return save.opened_chests.has(chest_id)
+
+func is_key_picked_up(key_id: int) -> bool:
+	return save.picked_up_keys.has(key_id)

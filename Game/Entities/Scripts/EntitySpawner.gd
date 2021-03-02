@@ -1,6 +1,8 @@
 extends Object
 class_name EntitySpawner
 
+signal spawn_finished()
+
 # spawn entities
 # @impure
 func spawn(_position: Vector2, _parent_node: Node, _spawn_property_list: Dictionary):

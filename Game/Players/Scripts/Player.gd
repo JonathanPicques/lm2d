@@ -173,7 +173,9 @@ func process_interaction(_delta: float):
 	for area in areas:
 		var node: Node = area.get_parent()
 		if node is EntityNode:
-			if input_interact_once and node.can_interact():
+			if node is EntityPickupNode and node.can_be_picked_up():
+				node.on_pickup()
+			elif input_interact_once and node.can_interact():
 				node.on_interact()
 
 ###

@@ -58,16 +58,35 @@ func _get_property_list() -> Array:
 	return []
 
 ###
+# Process
+###
+
+onready var opened := GameState.is_chest_opened(chest_id)
+
+func _ready():
+	if opened:
+		$Area2D.set_deferred("monitorable", false)
+		$AnimatedSprite.play("opened")
+
+###
 # Interactions
 ###
 
-# can_interact returns whether the player can interact with this chest.
-# @pure
+# @override
 func can_interact() -> bool:
-	return true
+	return not opened
 
-# on_interact is called when the player presses the "use" button while overlapping this chest.
-# @impure
+# @override
 func on_interact():
+	opened = true
+	$Area2D.set_deferred("monitorable", false)
+	$AnimatedSprite.play("opened")
+	$AudioStreamPlayer2D.play()
 	if _spawner:
-		_spawner.spawn(position, get_parent(), {})
+		_spawner.connect("spawn_finished", self, "on_spawn_finished")
+		_spawner.spawn($SpawnPoint.global_position, get_parent(), _properties)
+
+# on_spawn_finished is called when the spawner finished and save this chest was opened.
+# @impure
+func on_spawn_finished():
+	GameState.open_chest(chest_id)

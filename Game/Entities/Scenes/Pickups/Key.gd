@@ -1,10 +1,49 @@
-extends EntityNode
+extends EntityPickupNode
+class_name KeyEntityPickupNode
+
+###
+# Nodes
+###
+
+onready var KeyArea2D: Area2D = $Area2D
+onready var KeyRigidBody2D: RigidBody2D = $RigidBody2D
+onready var KeyAudioStreamPlayer2D: AudioStreamPlayer2D = $RigidBody2D/AudioStreamPlayer2D
+
+###
+# Config
+###
+
+export(Constants.KeyId) var key_id: int
+
+###
+# Process
+###
 
 # @impure
 func _ready():
-	$RigidBody2D.apply_impulse(Vector2(0.0, -2.0), Vector2((-1.0 if randf() < 0.5 else 1.0) * rand_range(13.0, 22.0), -120.0))
+	KeyArea2D.set_deferred("monitorable", false)
+
+# @impure
+func _process(_delta: float):
+	KeyArea2D.position = KeyRigidBody2D.position
 
 # @impure
 func on_body_entered(_body: Node):
-	if $RigidBody2D.linear_velocity.length() > Constants.PhysicsSleepLength:
-		$RigidBody2D/AudioStreamPlayer2D.play()
+	if KeyRigidBody2D.linear_velocity.length() > Constants.PhysicsSleepLength:
+		KeyAudioStreamPlayer2D.play()
+	else:
+		KeyArea2D.set_deferred("monitorable", true)
+
+###
+# Pickup
+###
+
+# @override
+func can_be_picked_up() -> bool:
+	return true
+
+# @override
+func on_pickup():
+	GameState.pickup_key(key_id)
+	emit_signal("picked_up")
+	queue_free()

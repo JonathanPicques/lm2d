@@ -145,7 +145,6 @@ region_enabled = true
 region_rect = Rect2( 3, 41, 14, 32 )
 
 [node name="CollisionBody" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2( 0, -15 )
 shape = SubResource( 1 )
 __meta__ = {
