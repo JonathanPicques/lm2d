@@ -11,8 +11,8 @@ func get_spawner_property_list() -> Array:
 	var property_list := []
 	property_list.append({
 		"name": "key/key_id",
-		"type": TYPE_STRING,
+		"type": TYPE_INT,
 		"hint": PROPERTY_HINT_ENUM,
-		"hint_string": ScriptHelpers.dic_string_join(Constants.KeyId),
+		"hint_string": ScriptHelpers.enum_join(Constants.KeyId),
 	})
 	return property_list

@@ -50,8 +50,9 @@ position = Vector2( 80, 112 )
 
 [node name="Chest" parent="Entities" instance=ExtResource( 4 )]
 position = Vector2( 176, 160 )
+chest_id = 0
 spawner_script = ExtResource( 5 )
-key/key_id = "KEY_2"
+key/key_id = 2
 
 [node name="Luigi" parent="." instance=ExtResource( 3 )]
 position = Vector2( 72, 112 )

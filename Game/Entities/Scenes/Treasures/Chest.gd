@@ -16,6 +16,7 @@ onready var ChestAudioStreamPlayer2D: AudioStreamPlayer2D = $AudioStreamPlayer2D
 
 var _spawner: EntitySpawner = null
 var _spawner_script: GDScript = null
+export(Constants.ChestId) var chest_id: int
 export var spawner_script: GDScript setget set_spawner_script, get_spawner_script
 
 func set_spawner_script(script: GDScript):
