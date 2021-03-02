@@ -61,9 +61,10 @@ func _get_property_list() -> Array:
 # Process
 ###
 
-onready var opened := GameState.is_chest_opened(chest_id)
+var opened := false
 
 func _ready():
+	opened = GameState.is_chest_opened(chest_id) if not Engine.editor_hint else false
 	if opened:
 		$Area2D.set_deferred("monitorable", false)
 		$AnimatedSprite.play("opened")
