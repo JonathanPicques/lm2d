@@ -2,20 +2,6 @@ extends Node2D
 class_name EntityNode
 
 ###
-# Player interactions
-###
-
-# can_interact returns whether the player can interact with this entity.
-# @pure
-func can_interact() -> bool:
-	return false
-
-# on_interact is called when the player presses the "use" button while overlapping this entity.
-# @impure
-func on_interact():
-	pass
-
-###
 # Lighting (react to light or spectral light)
 ###
 
@@ -43,6 +29,20 @@ func on_light_process(_delta: float, _light_type: int):
 # @param light_type - Constants.LightType
 # @impure
 func on_light_finish(_light_type: int):
+	pass
+
+###
+# Player interactions
+###
+
+# can_interact returns whether the player can interact with this entity.
+# @pure
+func can_interact() -> bool:
+	return false
+
+# on_interact is called when the player presses the "use" button while overlapping this entity.
+# @impure
+func on_interact():
 	pass
 
 ###

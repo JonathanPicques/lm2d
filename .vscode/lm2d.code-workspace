@@ -1,0 +1,21 @@
+{
+  "folders": [
+    {
+      "path": "../"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "public": false,
+      "node_modules": true,
+      "src/**/*.test.ts": false,
+      "src/**/*.test.tsx": false
+    },
+    // Editor
+    "editor.formatOnSave": true,
+    // Git lens
+    "gitlens.codeLens.enabled": false,
+    // Terminal
+    "terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe"
+  }
+}
