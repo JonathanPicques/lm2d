@@ -79,13 +79,19 @@ func load_level(level_path: String):
 ###
 
 func open_chest(chest_id: int):
-	save.opened_chests[chest_id] = true
+	if chest_id != Constants.ChestId.CHEST_DYNAMIC:
+		save.opened_chests[chest_id] = true
 
 func pickup_key(key_id: int):
-	save.picked_up_keys[key_id] = true
+	if key_id != Constants.KeyId.KEY_DYNAMIC:
+		save.picked_up_keys[key_id] = true
 
 func is_chest_opened(chest_id: int) -> bool:
+	if chest_id == Constants.ChestId.CHEST_DYNAMIC:
+		return false
 	return save.opened_chests.has(chest_id)
 
 func is_key_picked_up(key_id: int) -> bool:
+	if key_id == Constants.KeyId.KEY_DYNAMIC:
+		return false
 	return save.picked_up_keys.has(key_id)

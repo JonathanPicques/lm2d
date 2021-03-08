@@ -23,12 +23,14 @@ const LightTypeAll = LightType.Normal | LightType.Spectral
 ###
 
 enum KeyId {
+	KEY_DYNAMIC, # this key is generated, and won't ever be saved as picked up
 	KEY_DEBUG_1,
 	REMOVED_WAS_KEY_CLOSET,
 	KEY_MANSION_ENTRANCE_TO_KITCHEN
 }
 
 enum ChestId {
+	CHEST_DYNAMIC, # this chest is generated, and won't ever be saved as opened
 	CHEST_DEBUG_1,
 	REMOVED_WAS_CHEST_WITH_KEY_CLOSET
 	CHEST_WITH_KEY_MANSION_ENTRANCE_TO_KITCHEN,

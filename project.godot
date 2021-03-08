@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "EntityPickupNode",
+"class": "CoinEntityPickupNode",
+"language": "GDScript",
+"path": "res://Game/Entities/Scenes/Pickups/Coin/Coin.gd"
+}, {
 "base": "Reference",
 "class": "Constants",
 "language": "GDScript",
@@ -42,7 +47,7 @@ _global_script_classes=[ {
 "base": "EntityPickupNode",
 "class": "KeyEntityPickupNode",
 "language": "GDScript",
-"path": "res://Game/Entities/Scenes/Pickups/Key.gd"
+"path": "res://Game/Entities/Scenes/Pickups/Key/Key.gd"
 }, {
 "base": "Node",
 "class": "PlayerFiniteStateMachineNode",
@@ -70,6 +75,7 @@ _global_script_classes=[ {
 "path": "res://Game/ScriptHelpers.gd"
 } ]
 _global_script_class_icons={
+"CoinEntityPickupNode": "",
 "Constants": "",
 "EntityNode": "",
 "EntityPickupNode": "",

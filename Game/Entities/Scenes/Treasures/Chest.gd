@@ -16,6 +16,8 @@ onready var ChestAudioStreamPlayer2D: AudioStreamPlayer2D = $AudioStreamPlayer2D
 
 var _spawner: EntitySpawner = null
 var _spawner_script: GDScript = null
+var _spawner_properties := []
+
 export(Constants.ChestId) var chest_id: int
 export var spawner_script: GDScript setget set_spawner_script, get_spawner_script
 
@@ -23,13 +25,17 @@ func set_spawner_script(script: GDScript):
 	if script == null:
 		_spawner = null
 		_spawner_script = null
-		property_list_changed_notify()
+		_spawner_properties.clear()
 	else:
 		var spawner = script.new()
 		if spawner is EntitySpawner:
 			_spawner = spawner
 			_spawner_script = script
-			property_list_changed_notify()
+			_spawner_properties = spawner.get_spawner_property_list()
+			for spawner_property in _spawner_properties:
+				if spawner_property.has("default_value"):
+					set(spawner_property.name, spawner_property.default_value)
+	property_list_changed_notify()
 
 func get_spawner_script():
 	return _spawner_script
@@ -53,9 +59,7 @@ func _set(property: String, value):
 	return false
 
 func _get_property_list() -> Array:
-	if _spawner:
-		return _spawner.get_spawner_property_list()
-	return []
+	return _spawner_properties
 
 ###
 # Process
@@ -63,6 +67,7 @@ func _get_property_list() -> Array:
 
 var opened := false
 
+# @impure
 func _ready():
 	opened = GameState.is_chest_opened(chest_id) if not Engine.editor_hint else false
 	if opened:

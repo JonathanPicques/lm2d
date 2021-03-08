@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/SND_CoinBounce.ogg-c3f88b46769217a0315ff24320aea4db.oggstr"
+
+[deps]
+
+source_file="res://Game/Effects/Audio/SND_CoinBounce.ogg"
+dest_files=[ "res://.import/SND_CoinBounce.ogg-c3f88b46769217a0315ff24320aea4db.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

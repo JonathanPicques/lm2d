@@ -4,7 +4,7 @@
 [ext_resource path="res://Game/Tilesets/TS_Mansion.tres" type="TileSet" id=2]
 [ext_resource path="res://Game/Players/Scenes/Player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Game/Entities/Scenes/Treasures/Chest.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Game/Entities/Scenes/Pickups/KeySpawner.gd" type="Script" id=5]
+[ext_resource path="res://Game/Entities/Scenes/Pickups/Coin/CoinSpawner.gd" type="Script" id=5]
 
 [sub_resource type="CanvasItemMaterial" id=1]
 light_mode = 2
@@ -48,10 +48,11 @@ position = Vector2( 344, 112 )
 [node name="Candle2" parent="Entities" instance=ExtResource( 1 )]
 position = Vector2( 80, 112 )
 
-[node name="Chest" parent="Entities" instance=ExtResource( 4 )]
+[node name="ChestCoin" parent="Entities" instance=ExtResource( 4 )]
 position = Vector2( 176, 160 )
 spawner_script = ExtResource( 5 )
-key/key_id = 2
+coin/coin_delay = 0.1
+coin/coin_amount = 25
 
 [node name="Luigi" parent="." instance=ExtResource( 3 )]
 position = Vector2( 72, 112 )
